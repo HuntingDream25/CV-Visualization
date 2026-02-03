@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 简历可视化工具</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div>
+          <p class="tag">AI Resume Visualization</p>
+          <h1>让简历信息一键可视化</h1>
+          <p class="subtitle">
+            输入教育经历、工作经历和技能，系统会自动解析并生成时间轴、能力雷达和亮点摘要。
+          </p>
+        </div>
+        <div class="hero-card">
+          <h2>输入简历文本</h2>
+          <p>支持中文/英文关键字：教育/工作/技能，可选技能评分如：JavaScript(85)。</p>
+          <textarea id="resumeInput" placeholder="例如：\n教育经历：2017-2021 清华大学 计算机科学\n工作经历：2021-2023 XX科技 前端工程师\n技能：JavaScript、React、数据分析"></textarea>
+          <button id="generateBtn">生成可视化</button>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="panel" id="summaryPanel">
+          <h3>AI 亮点摘要</h3>
+          <ul id="summaryList" class="summary-list">
+            <li>等待解析输入内容…</li>
+          </ul>
+        </section>
+
+        <section class="panel" id="timelinePanel">
+          <div class="panel-header">
+            <h3>教育/工作时间轴</h3>
+            <span class="panel-tag">Timeline</span>
+          </div>
+          <div id="timeline" class="timeline"></div>
+        </section>
+
+        <section class="panel" id="logoPanel">
+          <div class="panel-header">
+            <h3>经历图标墙</h3>
+            <span class="panel-tag">Logos</span>
+          </div>
+          <div id="logoWall" class="logo-wall"></div>
+        </section>
+
+        <section class="panel" id="skillsPanel">
+          <div class="panel-header">
+            <h3>技能雷达与熟练度</h3>
+            <span class="panel-tag">Skills</span>
+          </div>
+          <div class="skills-wrapper">
+            <svg id="radar" viewBox="0 0 260 260" aria-label="技能雷达图"></svg>
+            <div id="skillBars" class="skill-bars"></div>
+          </div>
+        </section>
+
+        <section class="panel" id="suggestPanel">
+          <h3>智能建议</h3>
+          <div id="suggestion" class="suggestion">
+            <p>输入简历内容后，我们将生成个性化建议。</p>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
