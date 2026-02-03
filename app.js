@@ -59,46 +59,6 @@ const splitSkills = (line) =>
     .map((item) => item.trim())
     .filter(Boolean);
 
-const SKILL_SCORE_PATTERNS = [
-  /^(?<name>[^():]+)[(（](?<score>\d{1,3})[)）]$/,
-  /^(?<name>[^:：]+)[:：](?<score>\d{1,3})$/,
-  /^(?<name>.+?)\s+(?<score>\d{1,3})$/,
-];
-
-const parseSkillEntry = (entry) => {
-  for (const pattern of SKILL_SCORE_PATTERNS) {
-    const match = entry.match(pattern);
-    if (match?.groups) {
-      return {
-        name: match.groups.name.trim(),
-        score: Number(match.groups.score),
-      };
-    }
-  }
-  return { name: entry, score: null };
-};
-
-const clampScore = (score) => Math.max(30, Math.min(100, score));
-
-const countMatches = (text, terms) =>
-  terms.reduce((acc, term) => acc + (text.includes(term) ? 1 : 0), 0);
-
-const estimateSkillScore = (skill, context) => {
-  const lowerContext = context.toLowerCase();
-  const lowerSkill = skill.toLowerCase();
-  const base = 52;
-  const mentionBoost = lowerContext.includes(lowerSkill) ? 10 : 0;
-  const proficiencyBoost =
-    countMatches(context, ["精通", "熟练", "expert", "advanced"]) * 8 +
-    countMatches(context, ["熟悉", "掌握", "proficient", "intermediate"]) * 5 +
-    countMatches(context, ["了解", "basic", "entry"]) * 2;
-  const leadershipBoost = countMatches(context, ["负责人", "主导", "lead", "owner"]) * 4;
-  const yearMatch = context.match(/(\d+)\s*年/);
-  const yearBoost = yearMatch ? Math.min(Number(yearMatch[1]) * 2, 12) : 0;
-
-  return clampScore(base + mentionBoost + proficiencyBoost + leadershipBoost + yearBoost);
-};
-
 const buildTimelineItem = (text, type) => {
   const match = text.match(/(\d{4}\s*[-~—–]\s*\d{4}|\d{4}\s*[-~—–]\s*至今|\d{4})/);
   const period = match ? match[0].replace(/\s+/g, " ") : "时间未知";
@@ -112,21 +72,11 @@ const buildTimelineItem = (text, type) => {
   };
 };
 
-const buildSkillScores = (skills, contextText) => {
-  const entries = skills.map((skill) => parseSkillEntry(skill));
-  const uniqueMap = new Map();
-  entries.forEach((entry) => {
-    if (!uniqueMap.has(entry.name)) {
-      uniqueMap.set(entry.name, entry);
-    }
-  });
-
-  const uniqueEntries = Array.from(uniqueMap.values()).slice(0, 6);
-  return uniqueEntries.map((entry) => ({
-    name: entry.name,
-    score: clampScore(
-      entry.score ?? estimateSkillScore(entry.name, contextText)
-    ),
+const buildSkillScores = (skills) => {
+  const unique = Array.from(new Set(skills));
+  return unique.slice(0, 6).map((skill, index) => ({
+    name: skill,
+    score: 55 + ((index * 13) % 40),
   }));
 };
 
@@ -284,17 +234,8 @@ const renderAll = () => {
   const data = parseLines(resumeInput.value);
   renderTimeline(data);
   renderSummary(data);
-  const contextText = [
-    ...data.education,
-    ...data.work,
-    resumeInput.value,
-  ].join(" ");
-  const skillScores = buildSkillScores(data.skills, contextText);
-  renderRadar(
-    skillScores.length
-      ? skillScores
-      : buildSkillScores(["沟通(65)", "协作(70)", "领导力(68)"], contextText)
-  );
+  const skillScores = buildSkillScores(data.skills);
+  renderRadar(skillScores.length ? skillScores : buildSkillScores(["沟通", "协作", "领导力"]));
   renderSkillBars(skillScores);
   renderSuggestion(data);
 };
