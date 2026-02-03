@@ -192,6 +192,39 @@ button:hover {
   font-size: 15px;
 }
 
+.logo-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.logo-card {
+  background: #f8f9ff;
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  align-items: center;
+  justify-items: center;
+  min-height: 140px;
+  text-align: center;
+}
+
+.logo-card img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: white;
+  padding: 8px;
+  box-shadow: 0 8px 16px rgba(15, 35, 75, 0.08);
+}
+
+.logo-card span {
+  font-size: 13px;
+  color: #4f5d78;
+}
+
 .skills-wrapper {
   display: grid;
   gap: 20px;

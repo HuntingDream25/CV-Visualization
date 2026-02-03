@@ -18,7 +18,7 @@
         </div>
         <div class="hero-card">
           <h2>输入简历文本</h2>
-          <p>支持中文/英文关键字：教育/工作/技能。</p>
+          <p>支持中文/英文关键字：教育/工作/技能，可选技能评分如：JavaScript(85)。</p>
           <textarea id="resumeInput" placeholder="例如：\n教育经历：2017-2021 清华大学 计算机科学\n工作经历：2021-2023 XX科技 前端工程师\n技能：JavaScript、React、数据分析"></textarea>
           <button id="generateBtn">生成可视化</button>
         </div>
@@ -38,6 +38,14 @@
             <span class="panel-tag">Timeline</span>
           </div>
           <div id="timeline" class="timeline"></div>
+        </section>
+
+        <section class="panel" id="logoPanel">
+          <div class="panel-header">
+            <h3>经历图标墙</h3>
+            <span class="panel-tag">Logos</span>
+          </div>
+          <div id="logoWall" class="logo-wall"></div>
         </section>
 
         <section class="panel" id="skillsPanel">

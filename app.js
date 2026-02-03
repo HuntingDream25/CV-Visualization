@@ -5,6 +5,7 @@ const summaryList = document.getElementById("summaryList");
 const radar = document.getElementById("radar");
 const skillBars = document.getElementById("skillBars");
 const suggestion = document.getElementById("suggestion");
+const logoWall = document.getElementById("logoWall");
 
 const DEFAULT_INPUT = `教育经历：2017-2021 清华大学 计算机科学\n工作经历：2021-2023 XX科技 前端工程师，负责数据可视化平台\n技能：JavaScript、React、D3.js、数据分析、团队协作`;
 
@@ -59,6 +60,81 @@ const splitSkills = (line) =>
     .map((item) => item.trim())
     .filter(Boolean);
 
+const LOGO_DOMAIN_MAP = new Map([
+  ["清华大学", "tsinghua.edu.cn"],
+  ["北京大学", "pku.edu.cn"],
+  ["复旦大学", "fudan.edu.cn"],
+  ["上海交通大学", "sjtu.edu.cn"],
+  ["浙江大学", "zju.edu.cn"],
+  ["字节跳动", "bytedance.com"],
+  ["腾讯", "tencent.com"],
+  ["阿里巴巴", "alibaba.com"],
+  ["百度", "baidu.com"],
+  ["美团", "meituan.com"],
+  ["华为", "huawei.com"],
+  ["微软", "microsoft.com"],
+  ["谷歌", "google.com"],
+  ["Google", "google.com"],
+  ["Microsoft", "microsoft.com"],
+]);
+
+const extractOrgName = (text) => {
+  const cleaned = text
+    .replace(/(\d{4}\s*[-~—–]\s*\d{4}|\d{4}\s*[-~—–]\s*至今|\d{4})/g, "")
+    .replace(/[，,。]/g, " ")
+    .trim();
+  if (!cleaned) return null;
+  const [firstPart] = cleaned.split(/\s+/);
+  return firstPart || null;
+};
+
+const resolveLogoUrl = (orgName) => {
+  if (!orgName) return null;
+  const domain = LOGO_DOMAIN_MAP.get(orgName);
+  if (domain) return `https://logo.clearbit.com/${domain}`;
+  return `https://logo.clearbit.com/${orgName}.com`;
+};
+
+const SKILL_SCORE_PATTERNS = [
+  /^(?<name>[^():]+)[(（](?<score>\d{1,3})[)）]$/,
+  /^(?<name>[^:：]+)[:：](?<score>\d{1,3})$/,
+  /^(?<name>.+?)\s+(?<score>\d{1,3})$/,
+];
+
+const parseSkillEntry = (entry) => {
+  for (const pattern of SKILL_SCORE_PATTERNS) {
+    const match = entry.match(pattern);
+    if (match?.groups) {
+      return {
+        name: match.groups.name.trim(),
+        score: Number(match.groups.score),
+      };
+    }
+  }
+  return { name: entry, score: null };
+};
+
+const clampScore = (score) => Math.max(30, Math.min(100, score));
+
+const countMatches = (text, terms) =>
+  terms.reduce((acc, term) => acc + (text.includes(term) ? 1 : 0), 0);
+
+const estimateSkillScore = (skill, context) => {
+  const lowerContext = context.toLowerCase();
+  const lowerSkill = skill.toLowerCase();
+  const base = 52;
+  const mentionBoost = lowerContext.includes(lowerSkill) ? 10 : 0;
+  const proficiencyBoost =
+    countMatches(context, ["精通", "熟练", "expert", "advanced"]) * 8 +
+    countMatches(context, ["熟悉", "掌握", "proficient", "intermediate"]) * 5 +
+    countMatches(context, ["了解", "basic", "entry"]) * 2;
+  const leadershipBoost = countMatches(context, ["负责人", "主导", "lead", "owner"]) * 4;
+  const yearMatch = context.match(/(\d+)\s*年/);
+  const yearBoost = yearMatch ? Math.min(Number(yearMatch[1]) * 2, 12) : 0;
+
+  return clampScore(base + mentionBoost + proficiencyBoost + leadershipBoost + yearBoost);
+};
+
 const buildTimelineItem = (text, type) => {
   const match = text.match(/(\d{4}\s*[-~—–]\s*\d{4}|\d{4}\s*[-~—–]\s*至今|\d{4})/);
   const period = match ? match[0].replace(/\s+/g, " ") : "时间未知";
@@ -72,11 +148,21 @@ const buildTimelineItem = (text, type) => {
   };
 };
 
-const buildSkillScores = (skills) => {
-  const unique = Array.from(new Set(skills));
-  return unique.slice(0, 6).map((skill, index) => ({
-    name: skill,
-    score: 55 + ((index * 13) % 40),
+const buildSkillScores = (skills, contextText) => {
+  const entries = skills.map((skill) => parseSkillEntry(skill));
+  const uniqueMap = new Map();
+  entries.forEach((entry) => {
+    if (!uniqueMap.has(entry.name)) {
+      uniqueMap.set(entry.name, entry);
+    }
+  });
+
+  const uniqueEntries = Array.from(uniqueMap.values()).slice(0, 6);
+  return uniqueEntries.map((entry) => ({
+    name: entry.name,
+    score: clampScore(
+      entry.score ?? estimateSkillScore(entry.name, contextText)
+    ),
   }));
 };
 
@@ -210,6 +296,39 @@ const renderSkillBars = (skills) => {
   });
 };
 
+const renderLogoWall = (data) => {
+  logoWall.innerHTML = "";
+  const orgs = [
+    ...data.education.map((item) => ({
+      type: "教育",
+      name: extractOrgName(item),
+    })),
+    ...data.work.map((item) => ({
+      type: "工作",
+      name: extractOrgName(item),
+    })),
+  ].filter((entry) => entry.name);
+
+  if (!orgs.length) {
+    logoWall.innerHTML = '<p class="subtitle">暂无可视化图标。</p>';
+    return;
+  }
+
+  orgs.forEach((org) => {
+    const card = document.createElement("div");
+    card.className = "logo-card";
+    const logoUrl = resolveLogoUrl(org.name);
+    card.innerHTML = `
+      <img src="${logoUrl}" alt="${org.name} logo" loading="lazy" />
+      <div>
+        <strong>${org.name}</strong>
+        <span>${org.type}</span>
+      </div>
+    `;
+    logoWall.appendChild(card);
+  });
+};
+
 const renderSuggestion = (data) => {
   const suggestions = [];
 
@@ -234,9 +353,19 @@ const renderAll = () => {
   const data = parseLines(resumeInput.value);
   renderTimeline(data);
   renderSummary(data);
-  const skillScores = buildSkillScores(data.skills);
-  renderRadar(skillScores.length ? skillScores : buildSkillScores(["沟通", "协作", "领导力"]));
+  const contextText = [
+    ...data.education,
+    ...data.work,
+    resumeInput.value,
+  ].join(" ");
+  const skillScores = buildSkillScores(data.skills, contextText);
+  renderRadar(
+    skillScores.length
+      ? skillScores
+      : buildSkillScores(["沟通(65)", "协作(70)", "领导力(68)"], contextText)
+  );
   renderSkillBars(skillScores);
+  renderLogoWall(data);
   renderSuggestion(data);
 };
 
