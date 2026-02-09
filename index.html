@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Resume Visualization Tool</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div>
+          <p class="tag">AI Resume Visualization</p>
+          <h1>Visualize Your Resume Instantly</h1>
+          <p class="subtitle">
+            Paste education, work history, and skills. The system will parse them into a timeline,
+            skill radar, and highlight summary.
+          </p>
+        </div>
+        <div class="hero-card">
+          <h2>Paste resume text</h2>
+          <p>Supports keywords: Education / Work / Skills. Optional ratings like JavaScript(85).</p>
+          <textarea id="resumeInput" placeholder="Example:\nEducation: 2017-2021 Tsinghua University Computer Science\nWork: 2021-2023 ByteDance Frontend Engineer\nSkills: JavaScript, React, Data Analysis"></textarea>
+          <button id="generateBtn">Generate visualization</button>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="panel" id="summaryPanel">
+          <h3>AI Highlights</h3>
+          <ul id="summaryList" class="summary-list">
+            <li>Waiting for input…</li>
+          </ul>
+        </section>
+
+        <section class="panel" id="timelinePanel">
+          <div class="panel-header">
+            <h3>Education & Work Timeline</h3>
+            <span class="panel-tag">Timeline</span>
+          </div>
+          <div id="timeline" class="timeline"></div>
+        </section>
+
+        <section class="panel" id="logoPanel">
+          <div class="panel-header">
+            <h3>Organization Logos</h3>
+            <span class="panel-tag">Logos</span>
+          </div>
+          <div id="logoWall" class="logo-wall"></div>
+        </section>
+
+        <section class="panel" id="skillsPanel">
+          <div class="panel-header">
+            <h3>Skill Radar & Proficiency</h3>
+            <span class="panel-tag">Skills</span>
+          </div>
+          <div class="skills-wrapper">
+            <svg id="radar" viewBox="0 0 260 260" aria-label="Skill radar chart"></svg>
+            <div id="skillBars" class="skill-bars"></div>
+          </div>
+        </section>
+
+        <section class="panel" id="suggestPanel">
+          <h3>AI Suggestions</h3>
+          <div id="suggestion" class="suggestion">
+            <p>We will generate personalized suggestions after parsing your resume.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

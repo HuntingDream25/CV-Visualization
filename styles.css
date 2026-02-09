@@ -1,0 +1,276 @@
+:root {
+  color-scheme: light;
+  font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f5f7fb;
+  color: #1b2337;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f5f7fb 0%, #eef2fb 100%);
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+}
+
+.hero {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #e3ecff;
+  color: #2f5bff;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: clamp(28px, 4vw, 44px);
+  margin-bottom: 12px;
+}
+
+.subtitle {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #52607d;
+}
+
+.hero-card {
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(20, 41, 85, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hero-card h2 {
+  font-size: 20px;
+}
+
+.hero-card p {
+  color: #5a6782;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 150px;
+  border-radius: 12px;
+  border: 1px solid #e0e6f0;
+  padding: 12px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+button {
+  background: #2f5bff;
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(47, 91, 255, 0.3);
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.panel {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 18px 32px rgba(20, 41, 85, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel-tag {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f0f3ff;
+  color: #2f5bff;
+  font-weight: 600;
+}
+
+.summary-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.summary-list li {
+  padding: 12px 14px;
+  background: #f5f7ff;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  padding-left: 12px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: #d9e2ff;
+}
+
+.timeline-item {
+  display: grid;
+  gap: 4px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2f5bff;
+  box-shadow: 0 0 0 4px #e3ecff;
+}
+
+.timeline-item span {
+  font-size: 13px;
+  color: #6c7aa2;
+}
+
+.timeline-item strong {
+  font-size: 15px;
+}
+
+.logo-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.logo-card {
+  background: #f8f9ff;
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  align-items: center;
+  justify-items: center;
+  min-height: 140px;
+  text-align: center;
+}
+
+.logo-card img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: white;
+  padding: 8px;
+  box-shadow: 0 8px 16px rgba(15, 35, 75, 0.08);
+}
+
+.logo-card span {
+  font-size: 13px;
+  color: #4f5d78;
+}
+
+.skills-wrapper {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  align-items: center;
+}
+
+#radar {
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+.skill-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skill-bar {
+  display: grid;
+  gap: 6px;
+}
+
+.skill-bar span {
+  font-size: 13px;
+  color: #4f5d78;
+}
+
+.skill-track {
+  height: 10px;
+  background: #ecf0f7;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.skill-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2f5bff, #6f8dff);
+  border-radius: 999px;
+}
+
+.suggestion {
+  background: #f8f9ff;
+  border-radius: 16px;
+  padding: 16px;
+  line-height: 1.6;
+  color: #4d5a78;
+}
